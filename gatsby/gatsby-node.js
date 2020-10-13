@@ -29,7 +29,7 @@ async function turnPizzasIntoPages({ graphql, actions }) {
   });
 }
 
-export async function CreatePages(params) {
+export async function createPages(params) {
   // 1. pizzas
   await turnPizzasIntoPages(params);
   // 2. toppings

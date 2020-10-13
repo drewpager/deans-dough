@@ -11,6 +11,7 @@ exports.components = {
   "component---src-pages-index-js": hot(preferDefault(require("/Users/drewpage/Desktop/CODE/gatsby/deans-dough/gatsby/src/pages/index.js"))),
   "component---src-pages-orders-js": hot(preferDefault(require("/Users/drewpage/Desktop/CODE/gatsby/deans-dough/gatsby/src/pages/orders.js"))),
   "component---src-pages-pizzas-js": hot(preferDefault(require("/Users/drewpage/Desktop/CODE/gatsby/deans-dough/gatsby/src/pages/pizzas.js"))),
-  "component---src-pages-slicemasters-js": hot(preferDefault(require("/Users/drewpage/Desktop/CODE/gatsby/deans-dough/gatsby/src/pages/slicemasters.js")))
+  "component---src-pages-slicemasters-js": hot(preferDefault(require("/Users/drewpage/Desktop/CODE/gatsby/deans-dough/gatsby/src/pages/slicemasters.js"))),
+  "component---src-templates-pizza-js": hot(preferDefault(require("/Users/drewpage/Desktop/CODE/gatsby/deans-dough/gatsby/src/templates/Pizza.js")))
 }
 
