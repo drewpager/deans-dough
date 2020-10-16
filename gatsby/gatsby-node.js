@@ -1,9 +1,8 @@
 import path from 'path';
+import fetch from 'isomorphic-fetch';
 
 async function turnPizzasIntoPages({ graphql, actions }) {
-  // 1. Get Template
   const pizzaTemplate = path.resolve('./src/templates/Pizza.js');
-  // 2. query all pizzas
   const { data } = await graphql(`
     query {
       pizzas: allSanityPizza {
@@ -16,8 +15,7 @@ async function turnPizzasIntoPages({ graphql, actions }) {
       }
     }
   `);
-  console.log(data);
-  // 3. loop over each pizza and create page for it
+
   data.pizzas.nodes.forEach((pizza) => {
     actions.createPage({
       path: `pizza/${pizza.slug.current}`,
@@ -29,10 +27,66 @@ async function turnPizzasIntoPages({ graphql, actions }) {
   });
 }
 
+async function turnToppingsIntoPages({ graphql, actions }) {
+  const toppingsTemplate = path.resolve('./src/pages/pizzas.js');
+  const { data } = await graphql(`
+    query {
+      toppings: allSanityTopping {
+        nodes {
+          name
+          id
+        }
+      }
+    }
+  `);
+
+  data.toppings.nodes.forEach((topping) => {
+    actions.createPage({
+      path: `topping/${topping.name}`,
+      component: toppingsTemplate,
+      context: {
+        topping: topping.name,
+        toppingRegex: `/${topping.name}/i`,
+      },
+    });
+  });
+}
+
+async function fetchBeersAndTurnIntoNodes({
+  actions,
+  createNodeId,
+  createContentDigest,
+}) {
+  const res = await fetch('https://sampleapis.com/beers/api/ale');
+  const beers = await res.json();
+
+  for (const beer of beers) {
+    const nodeMeta = {
+      id: createNodeId(`beer-${beer.name}`),
+      parent: null,
+      children: [],
+      internal: {
+        type: 'Beer',
+        mediaType: 'application/json',
+        contentDigest: createContentDigest(beer),
+      },
+    };
+    actions.createNode({
+      ...beer,
+      ...nodeMeta,
+    });
+  }
+}
+
+export async function sourceNodes(params) {
+  // fetch a list of beers
+  await Promise.all([fetchBeersAndTurnIntoNodes(params)]);
+}
+
 export async function createPages(params) {
   // 1. pizzas
-  await turnPizzasIntoPages(params);
-  // 2. toppings
-
-  // 3. slicemasters
+  await Promise.all([
+    turnPizzasIntoPages(params),
+    turnToppingsIntoPages(params),
+  ]);
 }
