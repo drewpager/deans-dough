@@ -7,8 +7,10 @@ export default {
     title: `Dean's Dough`,
     siteUrl: 'http://deansdough.com',
     description: `The best dough in Dean's world`,
+    instagram: `@deankneadsdough`,
   },
   plugins: [
+    'gatsby-plugin-react-helmet',
     'gatsby-plugin-styled-components',
     {
       resolve: 'gatsby-source-sanity',
