@@ -19,7 +19,7 @@ export function useLatestData() {
   const [hotSlices, setHotSlices] = useState();
   const [slicemasters, setSlicemasters] = useState();
 
-  useEffect(function() {
+  useEffect(() => {
     fetch(process.env.GATSBY_GRAPHQL_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -27,18 +27,18 @@ export function useLatestData() {
       },
       body: JSON.stringify({
         query: gql`
-          query {
-            StoreSettings(id: "downtown") {
-              name
-              slicemaster {
-                ${deets}
-              }
-              hotslices {
-                ${deets}
-              }
+        query {
+          StoreSettings(id: "downtown") {
+            name
+            slicemaster {
+              ${deets}
+            }
+            hotslices {
+              ${deets}
             }
           }
-        `,
+        }
+      `,
       }),
     })
       .then((res) => res.json())
