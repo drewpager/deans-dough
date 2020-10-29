@@ -78,7 +78,7 @@ async function fetchBeersAndTurnIntoNodes({
   }
 }
 
-export async function turnSlicemastersIntoPages({ graphql, actions }) {
+async function turnSlicemastersIntoPages({ graphql, actions }) {
   const { data } = await graphql(`
     query {
       slicemasters: allSanityPerson {

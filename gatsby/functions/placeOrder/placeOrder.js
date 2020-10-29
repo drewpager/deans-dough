@@ -1,5 +1,30 @@
 const nodemailer = require('nodemailer');
 
+function generateOrderEmail({ order, total }) {
+  return `<div>
+    <h2>Your Recent Order for ${total}</h2>
+    <p>Please start heading over, your order will be ready in the next 20 minutes</p>
+    <ul>
+      ${order
+        .map(
+          (item) => `
+        <li>
+          <img src="${item.thumbnail}" alt="${item.name}" />
+          ${item.size} ${item.name} - ${item.price}
+        </li>`
+        )
+        .join('')}
+    </ul>
+    <p>Your total is <strong>${total}</strong> due at pickup</p>
+    <style>
+        ul {
+          list-style: none;
+        }
+    </style>
+  </div>
+  `;
+}
+
 // create a transport for nodemailer
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
@@ -10,10 +35,24 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+function wait(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 exports.handler = async (event, context) => {
   // TEST SEND EMAIL
   const body = JSON.parse(event.body);
 
+  if (body.mapleSyrup) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: 'Beebop, Goodbye - Error 3424221',
+      }),
+    };
+  }
   const requiredFields = ['email', 'name', 'order'];
 
   for (const field of requiredFields) {
@@ -28,14 +67,23 @@ exports.handler = async (event, context) => {
     }
   }
 
+  if (!body.order.length) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: `Why would you order nothing?`,
+      }),
+    };
+  }
+
   const info = await transporter.sendMail({
     from: "Dean's Dough <dean@example.com>",
-    to: 'orders@example.com',
+    to: `${body.name} <${body.email}>`,
     subject: 'New Order!',
-    html: `<p>Your Pizza order is here!</p>`,
+    html: generateOrderEmail({ order: body.order, total: body.total }),
   });
   return {
     statusCode: 200,
-    body: JSON.stringify(info),
+    body: JSON.stringify({ message: 'Success!' }),
   };
 };

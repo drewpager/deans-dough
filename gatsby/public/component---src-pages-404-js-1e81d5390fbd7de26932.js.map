@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/pages/404.js"],"names":["FourOhFourPage"],"mappings":"2FAAA,wEAEe,SAASA,IACtB,OACE,oCACE","file":"component---src-pages-404-js-1e81d5390fbd7de26932.js","sourcesContent":["import React from 'react';\n\nexport default function FourOhFourPage() {\n  return (\n    <>\n      <h1>404! MOTHA FUCKA!</h1>\n    </>\n  );\n}\n"],"sourceRoot":""}

@@ -32,7 +32,6 @@ export default function BeerPage({ data }) {
       <h2 className="center">We have {beers.length} beers available!</h2>
       <BeerGridStyles>
         {beers.map((beer) => {
-          console.log('harrro Beer');
           const rating = Math.round(beer.rating.average);
           return (
             <SingleBeerStyles key={beer.id}>

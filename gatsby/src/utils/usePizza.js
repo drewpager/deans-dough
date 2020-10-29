@@ -1,10 +1,16 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import OrderContext from '../components/OrderContext';
+import calculateOrderTotal from './calculateOrderTotal';
+import formatMoney from './formatMoney';
+import attachNamesandPrices from './attachNamesAndPrices';
 
-export default function usePizza({ pizzas, inputs }) {
+export default function usePizza({ pizzas, values }) {
   // 1. Create state to hold order
   // const [order, setOrder] = useState([]);
   const [order, setOrder] = useContext(OrderContext);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
+  const [message, setMessage] = useState('');
   // 2. Make a function to add things to order
   function addToOrder(orderedPizza) {
     setOrder([...order, orderedPizza]);
@@ -20,10 +26,47 @@ export default function usePizza({ pizzas, inputs }) {
     ]);
   }
   // 4. Send this data to a serverless function when they checkout
+  async function submitOrder(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    const body = {
+      order: attachNamesandPrices(order, pizzas),
+      total: formatMoney(calculateOrderTotal(order, pizzas)),
+      name: values.name,
+      email: values.email,
+      mapleSyrup: values.mapleSyrup,
+    };
+
+    const res = await fetch(
+      `${process.env.GATSBY_SERVERLESS_BASE}/placeOrder`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    const text = JSON.parse(await res.text());
+
+    if (res.status >= 400 && res.status < 600) {
+      setLoading(false);
+      setError(text.message);
+    } else {
+      setLoading(false);
+      setMessage(`Success! Come on down for your pizza!`);
+    }
+  }
 
   return {
     order,
     addToOrder,
     removeFromOrder,
+    loading,
+    error,
+    message,
+    submitOrder,
   };
 }
