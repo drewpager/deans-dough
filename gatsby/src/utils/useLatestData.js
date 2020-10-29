@@ -4,15 +4,15 @@ const gql = String.raw;
 
 const deets = gql`
   name
-    _id
-    image {
-      asset {
-        url
-        metadata {
-          lqip
-        }
+  _id
+  image {
+    asset {
+      url
+      metadata {
+        lqip
       }
     }
+  }
 `;
 
 export function useLatestData() {
