@@ -40,7 +40,6 @@ const SlicemasterStyle = styled.div`
 
 export default function SliceMastersPage({ data, pageContext }) {
   const slicemasters = data.slicemasters.nodes;
-
   return (
     <>
       <SEO title={`Slicemasters - Page ${pageContext.current || 1}`} />
@@ -53,7 +52,7 @@ export default function SliceMastersPage({ data, pageContext }) {
       />
       <SliceMastersGrid>
         {slicemasters.map((person) => (
-          <SlicemasterStyle>
+          <SlicemasterStyle key={person.id}>
             <Link to={`/slicemaster/${person.slug.current}`}>
               <h2>
                 <span className="mark">{person.name}</span>
